@@ -1,16 +1,31 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, Menu } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Search, ChevronDown } from 'lucide-react';
 import { ServicesMenu } from './ServicesMenu';
 import { ResourcesMenu } from './ResourcesMenu';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<'services' | 'resources' | null>(null);
+  const location = useLocation();
+
+  // Close menus when route changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setActiveMenu(null);
+  }, [location.pathname]);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+    setActiveMenu(null);
+  };
+
+  const handleMouseEnter = (menu: 'services' | 'resources') => {
+    setActiveMenu(menu);
+  };
+
+  const handleMouseLeave = () => {
     setActiveMenu(null);
   };
 
@@ -20,6 +35,10 @@ const Navbar = () => {
     } else {
       setActiveMenu(menu);
     }
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
@@ -33,26 +52,42 @@ const Navbar = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link to="/about" className="text-gray-700 hover:text-mc-blue font-medium">
+            <Link 
+              to="/about" 
+              className={`text-gray-700 hover:text-mc-blue font-medium ${isActive('/about') ? 'text-mc-blue' : ''}`}
+            >
               About
             </Link>
-            <div className="relative group">
-              <button 
-                onClick={() => toggleMenu('services')}
-                className={`flex items-center text-gray-700 hover:text-mc-blue font-medium ${activeMenu === 'services' ? 'text-mc-blue' : ''}`}
+            <div 
+              className="relative group"
+              onMouseEnter={() => handleMouseEnter('services')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link 
+                to="/services" 
+                className={`flex items-center text-gray-700 hover:text-mc-blue font-medium ${isActive('/services') || activeMenu === 'services' ? 'text-mc-blue' : ''}`}
               >
-                Services
-              </button>
+                Services <ChevronDown className="ml-1 h-4 w-4" />
+              </Link>
+              {activeMenu === 'services' && <ServicesMenu />}
             </div>
-            <div className="relative group">
-              <button 
-                onClick={() => toggleMenu('resources')}
-                className={`flex items-center text-gray-700 hover:text-mc-blue font-medium ${activeMenu === 'resources' ? 'text-mc-blue' : ''}`}
+            <div 
+              className="relative group"
+              onMouseEnter={() => handleMouseEnter('resources')}
+              onMouseLeave={handleMouseLeave}
+            >
+              <Link 
+                to="/resources" 
+                className={`flex items-center text-gray-700 hover:text-mc-blue font-medium ${isActive('/resources') || activeMenu === 'resources' ? 'text-mc-blue' : ''}`}
               >
-                Resources
-              </button>
+                Resources <ChevronDown className="ml-1 h-4 w-4" />
+              </Link>
+              {activeMenu === 'resources' && <ResourcesMenu />}
             </div>
-            <Link to="/contact" className="text-gray-700 hover:text-mc-blue font-medium">
+            <Link 
+              to="/contact" 
+              className={`text-gray-700 hover:text-mc-blue font-medium ${isActive('/contact') ? 'text-mc-blue' : ''}`}
+            >
               Contact
             </Link>
             <button className="text-gray-700 hover:text-mc-blue">
@@ -65,14 +100,10 @@ const Navbar = () => {
             className="md:hidden text-gray-700"
             onClick={toggleMobileMenu}
           >
-            <Menu size={24} />
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
           </button>
-        </div>
-
-        {/* Mega Menu Container */}
-        <div className={`${activeMenu ? 'menu-open' : ''}`}>
-          {activeMenu === 'services' && <ServicesMenu />}
-          {activeMenu === 'resources' && <ResourcesMenu />}
         </div>
 
         {/* Mobile Menu */}
@@ -85,6 +116,7 @@ const Navbar = () => {
                 className="flex justify-between items-center py-2 text-gray-700 w-full text-left"
               >
                 <span>Services</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${activeMenu === 'services' ? 'rotate-180' : ''}`} />
               </button>
               {activeMenu === 'services' && (
                 <div className="pl-4 border-l-2 border-mc-blue-light space-y-2 py-2">
@@ -101,6 +133,7 @@ const Navbar = () => {
                 className="flex justify-between items-center py-2 text-gray-700 w-full text-left"
               >
                 <span>Resources</span>
+                <ChevronDown className={`h-4 w-4 transition-transform ${activeMenu === 'resources' ? 'rotate-180' : ''}`} />
               </button>
               {activeMenu === 'resources' && (
                 <div className="pl-4 border-l-2 border-mc-blue-light space-y-2 py-2">

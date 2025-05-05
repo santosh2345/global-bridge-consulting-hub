@@ -63,8 +63,8 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom Morgan & Colney colors
-				"mc-blue": "#33C3F0",
+				// Custom Morgan & Colney colors - Updating sky blue to darker shade
+				"mc-blue": "#0EA5E9", // Darker sky blue
 				"mc-blue-light": "#E8F7FC",
 				"mc-yellow": "#FEF7CD",
 				"mc-white": "#FFFFFF",
@@ -116,4 +116,3 @@ export default {
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

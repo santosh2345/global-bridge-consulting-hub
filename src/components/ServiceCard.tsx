@@ -15,7 +15,7 @@ const ServiceCard = ({ title, description, icon, href }: ServiceCardProps) => {
       to={href} 
       className="block bg-white rounded-lg p-6 shadow-sm border border-gray-100 card-hover"
     >
-      <div className="flex items-center justify-center w-12 h-12 bg-mc-blue-light rounded-full mb-4">
+      <div className="flex items-center justify-center w-12 h-12 bg-mc-blue rounded-full mb-4">
         {icon}
       </div>
       <h3 className="text-xl font-semibold mb-2 text-gray-800">{title}</h3>
